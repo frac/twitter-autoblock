@@ -30,6 +30,8 @@ from PIL import Image, ImageTk
 import re
 from htmlentitydefs import name2codepoint
 
+AUTOBLOCK = 'autoblock'
+
 class TwClientError(Exception):
   '''Base class for TwClient errors'''
 
@@ -122,8 +124,9 @@ class PwDeferedTwitter(object):
         return True, self._dataCache[key]
 
 class TwClient(object):
-    def __init__(self, aVersion, aUser, aPassword):
-        self.user, self.password = aUser, aPassword      
+    def __init__(self, aVersion, params):
+        self._params = params
+        self.user, self.password = params['user'], params['password']
         self.api = twitter.Api(self.user,self.password)
         self.api.SetXTwitterHeaders('pwytter', 'http://www.pwytter.com/files/meta.xml', aVersion)       
         self.api.SetSource('pwytter')       
@@ -150,6 +153,8 @@ class TwClient(object):
         self._usercache={}
         self.timeLines=("User","Friends","Replies","Direct", "Composite","Public")
         self._currentTimeLine = "Friends"  
+        self._filters = []
+        self.get_filters()
         
         self._currentVersion = float(aVersion)
         self.VersionOK = False
@@ -312,8 +317,6 @@ class TwClient(object):
         
     def refresh(self):
         self._getCurrentTimeLine()
-        import datetime
-        print "refreshing %s"% datetime.datetime.today()
         self.texts=[]
         self.ids=[]
         for s in self._statuses :
@@ -333,8 +336,18 @@ class TwClient(object):
             loaded, favorited = False, False
             if s.type <> 'direct':
                 loaded, favorited = self.isFavorite(s.user.screen_name, s.id)
-                
+               
             msg = htmlentitydecode(s.text).encode('latin-1','replace')
+            if self._filters:
+                msg_lower = msg.lower()
+                censor = False
+                for filter in self._filters:
+                    if filter in msg_lower:
+                        censor = True
+                        break
+                if censor:
+                    continue
+
             #remove existing ids : in composite timeline to keep replies 
             if s.id in self.ids:
                 self.texts.pop()
@@ -353,6 +366,19 @@ class TwClient(object):
                               })
                     
     def sendText(self,aText):
+        if aText.lower().strip().startswith(AUTOBLOCK):
+            filters = aText.lower().strip()[len(AUTOBLOCK):].strip().split(" ")
+            if filters[-1] == 'off':
+                filters.pop()
+                self.remove_filters(filters)
+            elif filters[-1] == 'clear':
+                self._filters = []
+                self.save_filters()
+            else:
+                if  filters[-1] == 'on':
+                    filters.pop()
+                self.add_filters(filters)
+            return
         self._statuses = self.api.PostUpdate(aText)
         
     def sendDirectMessage(self, aUser, aText):
@@ -368,6 +394,29 @@ class TwClient(object):
                 friendName= f.screen_name.encode('latin-1','replace')
                 self.Friends.append(friendName)
         return loaded
+
+    def get_filters(self):
+        self._filters = self._params.load_filters()
+        print "loading filters", self._filters
+
+    def add_filters(self,filters):
+        for filter in filters:
+            if not (filter in self._filters):
+                self._filters.append(filter)
+        self.save_filters()
+    def remove_filters(self,filters):
+        for filter in filters:
+            try:
+                self._filters.remove(filter)
+            except ValueError:
+                pass
+        self.save_filters()
+
+    def save_filters(self):
+        print "saving filters", self._filters
+        self._params.save_filters(self._filters)
+
+
 
     def getFollowers(self):
         loaded, self._followers = self._deferredLoader.Get("followers:%s" % self.user, 

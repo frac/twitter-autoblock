@@ -141,7 +141,7 @@ class MainPanel(Frame):
         except:
             self._needToShowParameters = True
                 
-        self.tw=twclient.TwClient(__version__, self._params['user'], self._params['password'])       
+        self.tw=twclient.TwClient(__version__, self._params)       
         self._applyParameters()
 
         self._defaultTwitText = _('Enter your message here...')

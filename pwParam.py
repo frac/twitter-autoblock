@@ -15,22 +15,24 @@
 
 import xml.dom.minidom as dom
 import os.path
+import cPickle as pickle
 
 class PwytterParams(object):
     """Handle the Pwtytter configuration in an XML file pwytter.xml
     """
     def __init__(self):
-        self._paramPath = 'cfg'
+        self._paramPath = os.path.expanduser('~/.pwytter/cfg')
         self._paramFileName = os.path.join(self._paramPath,'pwytter.xml')        
+        self._paramFilterName = os.path.join(self._paramPath,'filter.pickle')        
         self.values={}
         self._resetDefaults()
         
     def _resetDefaults(self):
         self.values['user'] = 'pwytterTest'
         self.values['password'] = 'pwytterTest'
-        self.values['refresh_rate'] = '120'
+        self.values['refresh_rate'] = '180'
         self.values['nb_lines'] = '4'
-        self.values['theme'] = 'white'
+        self.values['theme'] = 'black'
         self.values['language'] = 'English'
 
     def __getitem__(self, aKey):
@@ -38,6 +40,16 @@ class PwytterParams(object):
         
     def __setitem__(self, aKey, value):
         self.values[aKey] = value
+
+    def load_filters(self):
+        try:
+            return pickle.load(open(self._paramFilterName, "rb"))
+        except IOError:
+            return []
+
+    def save_filters(self, filters):
+        pickle.dump(filters, open(self._paramFilterName, "wb"))
+        
 
     def readFromXML(self):
         self._resetDefaults()
