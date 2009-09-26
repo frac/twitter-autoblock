@@ -1,5 +1,6 @@
 *.pyc
 build/
 dist/
+cfg/
 pwytter.egg-info/
 clean.sh
