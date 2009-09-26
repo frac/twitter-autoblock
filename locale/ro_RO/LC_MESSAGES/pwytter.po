@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pwytter\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-10-18 14:46+0100\n"
+"Last-Translator: PJ Coudert <coudert@free.fr>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Romanian\n"
+
+#: pwSplashScreen.py:50
+msgid "Pwytter"
+msgstr "Pwitter"
+
+#: pwSplashScreen.py:54
+msgid "Loading..."
+msgstr "Se incarca..."
+
+#: pwSplashScreen.py:56
+msgid "Licence: GNU GPL v2"
+msgstr "Licenta: GNU GPL v2"
+
+#: pwytter.py:124
+msgid "Enter your message here..."
+msgstr "Introdu mesajul tau aici..."
+
+#: pwytter.py:128
+msgid "Enter your direct message here..."
+msgstr "Introdu  mesajul tau direct aici..."
+
+#: pwytter.py:195
+#: pwytter.py:207
+msgid "Parameters..."
+msgstr "Parametri..."
+
+#: pwytter.py:220
+msgid "%s: %s %cLocation: %s"
+msgstr "%s: %s %cLocatie: %s"
+
+#: pwytter.py:239
+#: pwytter.py:259
+msgid "Pwytter web site..."
+msgstr "Website Pwytter..."
+
+#: pwytter.py:241
+#: pwytter.py:260
+msgid "Show friends"
+msgstr "Afiseaza prieteni"
+
+#: pwytter.py:243
+#: pwytter.py:261
+msgid "Hide friends"
+msgstr "Ascunde prieteni"
+
+#: pwytter.py:246
+#: pwytter.py:265
+msgid "Switch TimeLine"
+msgstr "Schimba Timeline"
+
+#: pwytter.py:248
+#: pwytter.py:266
+msgid "Refresh"
+msgstr "Reimprospateaza"
+
+#: pwytter.py:262
+msgid "Current Time Unknown..."
+msgstr "Data curenta necunoscuta"
+
+#: pwytter.py:263
+#: pwytter.py:774
+msgid "Timeline: %s"
+msgstr "Timeline: %s"
+
+#: pwytter.py:273
+#: pwytter.py:288
+#: pwytter.py:300
+#: pwytter.py:349
+#: pwytter.py:430
+#: pwytter.py:480
+msgid "Cancel"
+msgstr "Revocare"
+
+#: pwytter.py:277
+#: pwytter.py:291
+msgid "Update now..."
+msgstr "Actualizeaza acum..."
+
+#: pwytter.py:289
+msgid "A new Pwytter release is available. You should upgrade now !"
+msgstr "O versiune noua de Pwytter este valabila. Ar fi bine sa-l actualizati acum!"
+
+#: pwytter.py:350
+msgid "Click aici pentru a va face un cont gratuit de Twitter..."
+msgstr ""
+
+#: pwytter.py:352
+msgid "User"
+msgstr "Utilizator"
+
+#: pwytter.py:353
+msgid "Password"
+msgstr "Parola"
+
+#: pwytter.py:354
+msgid "Refresh (s)"
+msgstr "Reimprospatare"
+
+#: pwytter.py:355
+msgid "Lines"
+msgstr "Linii"
+
+#: pwytter.py:357
+msgid "Apply"
+msgstr "Aplica"
+
+#: pwytter.py:358
+msgid "Theme"
+msgstr "Teme"
+
+#: pwytter.py:359
+msgid "Language"
+msgstr "Limba"
+
+#: pwytter.py:410
+#: pwytter.py:471
+msgid "Direct Message..."
+msgstr "Mesaj direct..."
+
+#: pwytter.py:436
+#: pwytter.py:482
+#: pwytter.py:696
+#: pwytter.py:730
+msgid "Send"
+msgstr "Trimite"
+
+#: pwytter.py:582
+msgid "Following"
+msgstr "Urmaresti"
+
+#: pwytter.py:586
+msgid "Followers"
+msgstr "Urmaritori"
+
+#: pwytter.py:830
+msgid "%d character(s) left"
+msgstr "%d caractere ramase"
+
+#: twclient\twitter.py:148
+msgid "about a second ago"
+msgstr "acum o secunda"
+
+#: twclient\twitter.py:150
+msgid "about %d seconds ago"
+msgstr "acum %d secunde"
+
+#: twclient\twitter.py:152
+msgid "about a minute ago"
+msgstr "acum un minut"
+
+#: twclient\twitter.py:154
+msgid "about %d minutes ago"
+msgstr "acum %d minute"
+
+#: twclient\twitter.py:156
+msgid "about an hour ago"
+msgstr "acum o ora"
+
+#: twclient\twitter.py:158
+msgid "about %d hours ago"
+msgstr "acum %d ore"
+
+#: twclient\twitter.py:160
+msgid "about a day ago"
+msgstr "acum o zi"
+
+#: twclient\twitter.py:162
+msgid "about %d days ago"
+msgstr "acum %d zile"
+

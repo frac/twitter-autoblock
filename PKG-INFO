@@ -1,0 +1,25 @@
+Metadata-Version: 1.0
+Name: pwytter
+Version: 0.8
+Summary: A python client for Twitter
+Home-page: http://www.pwytter.com
+Author: Pierre-Jean Coudert
+Author-email: coudert@free.fr
+License: GPL 2
+Download-URL: http://www.pwytter.com/download/
+Description: A python client for Twitter. Portable User Interface in Tk.
+Keywords: twitter client python tkinter
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: MacOS X
+Classifier: Environment :: Win32 (MS Windows)
+Classifier: Environment :: X11 Applications
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Internet

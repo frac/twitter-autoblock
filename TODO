@@ -1,0 +1,67 @@
+# Release 0.9
+#TODO: Single WIN32 Setup with InnoSetup : http://www.jrsoftware.org/isdl.php
+#TODO: tkBalloon on Mac OS X: Should be displayed on top. try tix balloons
+#TODO: check mac / linux themes
+
+#TODO: deferred timeline loading, download only the required number of messages
+#TODO: add newly sended tweet in cache for immediate display
+#TODO: remove duplicates from composite timeline
+#TODO: delete twitt inline
+#TODO: improve SplashScreen
+#TODO: memorize current timeline choice in parameters
+#TODO: refreshtime in minutes
+#TODO: anti-aliased font on ubuntu
+#TODO: Resize + Scroll to chaage number of lines
+       http://effbot.org/zone/tkinter-window-size.htm
+       http://effbot.org/zone/tkinter-autoscrollbar.htm
+#TODO: Setup.py: must be ok on linux
+#TODO: I18N timeline name, theme name
+#TODO: Mac version: Remove console, add icon
+#TODO: Reduce friend image size / limit number of displayed friends / Paging
+#TODO: Hide error message (icon with message in Hint)
+#TODO: Design an Icon
+#TODO: Notifications, Mac Growl integration ( http://growl.info/documentation/developer/python-support.php, http://aaronland.info/python/twitter/twnotifier/, ...
+#TODO: onTop user information dialog : name, links, directmessage, add as friend, ...
+#TODO: multiple accounts as in http://funkatron.com/index.php/site/spaz_a_twitter_client_for_mac_os_x_windows_and_linux/
+#TODO: Jaiku, Pownce client
+
+#TODO: remove simplejson from dist
+#TODO: reorganize source tree : bat directory, setup outside rsc, ...
+
+# Later
+#TODO: setup.py : auto install twitter.py, simplejson, PIL
+#TODO: POP3/IMAP client : http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52299
+#TODO: RSS Client : http://feedparser.org/, http://code.google.com/p/davtwitter/
+#TODO: Twitter user browser : click on a user image to go in his context (messages, friends,..)
+#TODO: Create / delete friendship
+#TODO: “?” help button presenting : 1) whats twitter 2) why use twitter 3) how to use pwytter 3.1) especially how to create an account
+
+#TODO: make a python-twitter patch : 'source':'pwytter' in PostUpdate
+#TODO: make a python-twitter patch : gettext
+#TODO: make a python-twitter patch : utc time
+
+
+#Create new release
+- update TODO.txt and CHANGES.txt
+- update SVN
+- build src dist
+- build py2exe
+- build by2app
+
+- upload on google hosting
+- change google hosting links
+- update Release notes on google hosting
+- change pwytter.com links
+
+- upload version.txt
+- upload meta.xml
+
+- write an announce on pwytter.com
+- write an announce on pwytter google group
+- write an announce on pwytter/twitter account
+
+- register on pypi
+- register on freshmeat
+
+
+

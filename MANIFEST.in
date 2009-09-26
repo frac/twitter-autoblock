@@ -1,0 +1,10 @@
+recursive-include media *.png
+recursive-include media *.gif
+recursive-include media *.ico
+recursive-include media *.icns
+recursive-include twclient\doc *.html
+recursive-include theme *.pwt
+include *.txt
+include . TODO
+include *.pot
+recursive-include locale *.*

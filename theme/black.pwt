@@ -1,0 +1,16 @@
+text#       : white
+bg#         : #1F242A
+1stLine#    : #484C4F
+line#       : #2F3237
+directLine# : #9E5A51
+replyLine#  : #878440
+param#      : #585C5F
+timeline#   : #484C4F
+me_bg#      : #2F3237
+me_fg#      : #BBBBBB
+time#       : #BBBBBB
+message#    : #99CBFE
+messageUrl# : #B9DBFF
+directMsg#  : #686C6F
+update#     : #FFBBBB
+twitEdit#   : #2F3237

@@ -1,0 +1,195 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pwytter\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-10-29 20:44+0100\n"
+"Last-Translator: pjc <coudert@free.fr>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: pwSplashScreen.py:50
+msgid "Pwytter"
+msgstr "Pwytter"
+
+#: pwSplashScreen.py:54
+msgid "Loading..."
+msgstr "Chargement en cours..."
+
+#: pwSplashScreen.py:56
+msgid "Licence: GNU GPL v2"
+msgstr "Licence: GNU GPL v2"
+
+#: pwytter.py:136
+msgid "Enter your message here..."
+msgstr "Entrer votre message ici..."
+
+#: pwytter.py:140
+msgid "Enter your direct message here..."
+msgstr "Entrer votre message direct ici..."
+
+#: pwytter.py:209
+#: pwytter.py:221
+msgid "Parameters..."
+msgstr "Paramètres..."
+
+#: pwytter.py:234
+msgid "%s: %s %cLocation: %s"
+msgstr "%s: %s %cLieu : %s"
+
+#: pwytter.py:253
+#: pwytter.py:279
+msgid "Pwytter web site..."
+msgstr "Site web Pwytter.com..."
+
+#: pwytter.py:255
+#: pwytter.py:280
+msgid "Show friends"
+msgstr "Afficher les amis"
+
+#: pwytter.py:257
+#: pwytter.py:281
+msgid "Hide friends"
+msgstr "Cacher les amis"
+
+#: pwytter.py:260
+#: pwytter.py:285
+msgid "Switch TimeLine"
+msgstr "Changer de fil"
+
+#: pwytter.py:268
+#: pwytter.py:286
+msgid "Refresh"
+msgstr "Rafraichir"
+
+#: pwytter.py:282
+msgid "Current Time Unknown..."
+msgstr "Heure actuelle inconnue..."
+
+#: pwytter.py:283
+#: pwytter.py:864
+msgid "Timeline: %s"
+msgstr "Fil actuel: %s"
+
+#: pwytter.py:293
+#: pwytter.py:308
+#: pwytter.py:320
+#: pwytter.py:388
+#: pwytter.py:475
+#: pwytter.py:533
+msgid "Cancel"
+msgstr "Annuler"
+
+#: pwytter.py:297
+#: pwytter.py:311
+msgid "Update now..."
+msgstr "Mettre à jour maintenant..."
+
+#: pwytter.py:309
+msgid "A new Pwytter release is available. You should upgrade now !"
+msgstr "Une mise à jour de Pwytter est disponible. Vous devriez mettre à jour !"
+
+#: pwytter.py:389
+msgid "Click here to create a Free Twitter Account..."
+msgstr "Cliquer ici pour créer un un compte Twitter gratuit..."
+
+#: pwytter.py:391
+msgid "User"
+msgstr "Utilisateur"
+
+#: pwytter.py:392
+msgid "Password"
+msgstr "Mot de passe"
+
+#: pwytter.py:393
+msgid "Refresh (s)"
+msgstr "Rafraichissement (s)"
+
+#: pwytter.py:394
+msgid "Lines"
+msgstr "Lignes"
+
+#: pwytter.py:396
+msgid "Apply"
+msgstr "Appliquer"
+
+#: pwytter.py:397
+msgid "Theme"
+msgstr "Thème"
+
+#: pwytter.py:398
+msgid "Language"
+msgstr "Langue"
+
+#: pwytter.py:449
+#: pwytter.py:522
+msgid "Direct Message..."
+msgstr "Message direct..."
+
+#: pwytter.py:454
+msgid "UnFavorite"
+msgstr "Supprimer Favoris"
+
+#: pwytter.py:457
+msgid "Favorite"
+msgstr "Favoris"
+
+#: pwytter.py:465
+msgid "Reply to this message..."
+msgstr "Répondre à ce message..."
+
+#: pwytter.py:481
+#: pwytter.py:535
+#: pwytter.py:766
+#: pwytter.py:800
+msgid "Send"
+msgstr "Envoyer"
+
+#: pwytter.py:646
+msgid "Following"
+msgstr "Mes amis :"
+
+#: pwytter.py:650
+msgid "Followers"
+msgstr "Je suis suivi par :"
+
+#: pwytter.py:933
+msgid "%d character(s) left"
+msgstr "Il reste %d caractères"
+
+#: twclient\twitter.py:148
+msgid "about a second ago"
+msgstr "Il y a une seconde"
+
+#: twclient\twitter.py:150
+msgid "about %d seconds ago"
+msgstr "Il y a %d secondes"
+
+#: twclient\twitter.py:152
+msgid "about a minute ago"
+msgstr "Il y a une minute"
+
+#: twclient\twitter.py:154
+msgid "about %d minutes ago"
+msgstr "Il y a %d minutes"
+
+#: twclient\twitter.py:156
+msgid "about an hour ago"
+msgstr "Il y a une heure"
+
+#: twclient\twitter.py:158
+msgid "about %d hours ago"
+msgstr "Il y a %d heures"
+
+#: twclient\twitter.py:160
+msgid "about a day ago"
+msgstr "Il y a un jour"
+
+#: twclient\twitter.py:162
+msgid "about %d days ago"
+msgstr "Il y a %d jours"
+

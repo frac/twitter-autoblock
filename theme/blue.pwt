@@ -1,0 +1,16 @@
+text#       : black
+bg#         : #FCFCFF
+1stLine#    : #F8F8FF
+line#       : #F0F0FF
+directLine# : #FFCCCC
+replyLine#  : #FFFFCC
+param#      : #E0E0EE
+timeline#   : #D0D0DD
+me_bg#      : #F0F0FF 
+me_fg#      : #777777
+time#       : #888888
+message#    : #333333
+messageUrl# : #333388
+directMsg#  : #E0E0FF
+update#     : #FFBBBB
+twitEdit#   : #F0F0FF

@@ -1,0 +1,14 @@
+<client>
+	<name>pwytter</name>
+	<version>0.7</version>
+	<author>
+		<name>Pierre-Jean Coudert</name>
+		<email>coudert@free.fr</email>
+		<twitter>pjblog</twitter>
+	</author>
+	<url>http://www.pwytter.com</url>
+	<twitter>pwytter</twitter>
+	<description>
+	  <![CDATA[The free twitter GUI client written in Python.]]>
+	</description>
+</client>

@@ -1,0 +1,95 @@
+2007-11-01
+  * Release 0.8
+  * Greater performances
+	  * asynchronous version check, Friends/Followers loading for quick startup 
+	  * asynchronous url loader (favorites, images, ...)
+	  * filesystem cache for quick ressource loading at startup (images, users, favorites)
+  * Create/Remove Favorites
+  * New Timelines support : "Composite", "Replies" and "Direct Messages" 
+  * New popup menu to choose current timeline
+  * Easy reply : added an icon button in the message : add @name automatically
+  * New Windows setup for one click install
+  * Changed line color for replies and direct messages
+  * use python-witter 0.5 with cache
+  * Bug corrected in url detection
+  * added flags in language popup menu
+  * New Translations
+	  * Simplified Chinese translation : eQuw acKman <ackman dot c at gmail dot com>
+	  * Traditional Chinese translation : Weizhong Yang <zonble at gmail dot com>
+	  * German translation : Yseult <b dot kreissl at gmail dot com>  
+	  * Italian translation : Barbara aka Black Cat <theblackcat at gmail dot com> 
+	  * Japanese translation : Yusuke Yamamoto <yusuke at mac dot com>
+	  * Polish translation : Pawel Solyga <pawel dot solyga at gmail dot com>
+	  * Romanian translation : Claudiu Antohi <claudiu at wip dot ro>
+	  * Serbian translation : Milos Topic <topicm at gmail dot com> 
+	  * Swedish translation : Jonas Nockert <jonasnockert at gmail dot com> 
+	  * Spanish translation : Jorge Rangel <jarg1985 at gmail dot com> 
+	  * Portuguese translation : brunoric <brunoric at gmail dot com> 
+	  * Russian translation : Bloodcarter <bloodcarter at gmail dot com>
+
+2007-08-31
+  * Release 0.7
+  * Splashcreen at startup
+  * GUI Internationalization. English, French translations included
+  * Themable user interface, Theme chooser in parameters, 3 Themes included
+  * Mac App version with py2app
+  * UTF-8 message support and unescape HTML entities
+  * Better edit line handling : car count, erase "enter your message here"
+  * Convert python sources "End of Line" to linux
+  * setup.py now uses SetupTools
+  * pwytter registered in python cheesecake
+
+
+2007-07-23
+  * Release 0.6
+  * Send direct message
+  * Display Followers
+  * Update autodetect : New pwytter release 
+  * Show parameter dialog on first launch
+  * Added a link to create a twitter account https://twitter.com/signup in parameter dialog
+  * The password is masked now in parameter dialog
+  * display a busy cursor when getting timeline and sending message
+  * Add a Link to pwytter.com
+  
+2007-07-19
+  * Release 0.5.1
+  * Bug corrected in setup.py for Win32 release
+  * new file MANIFEST.in for source distribution
+
+2007-07-14
+  * Release 0.5
+  * add Image and user hints
+  * Reduce UI width to 450px, better Balloon position
+  * Send X-Twitter header with url -> http://www.pwytter.com/files/meta.xml
+  * Friends support: show/hide button, load and display dynamically
+  * Now run on linux
+  * sdist support in setup.py
+  * Bug: in change parameters : there is now a live refresh
+  * Bug: No more exception when quitting the application
+
+2007-06-30
+  * Release 0.4
+  * Asynchronous Image Loading : better UI response
+  * User cache to reduce twitter API calls
+  * Setup with py2exe support
+  
+2007-06-22
+  * Release 0.3
+  * Edit parameters/  Save in XML Files
+  * clickable profile and user URLs, Names and Images
+  * Improved UI
+  * MultiLine Message display and Improved Word Wrap
+  * Better path management (Unix path compatible)
+  * icons on button
+  * balloons suport (Hints)
+  * Bug corrected in UserTimeLine Display : error 404
+
+2007-06-18
+  * Release 0.2
+  * Add Timeline chooser
+
+2007-06-16
+  * Release 0.1
+  * Initial svn checkin of pwytter
+
+
