@@ -312,6 +312,8 @@ class TwClient(object):
         
     def refresh(self):
         self._getCurrentTimeLine()
+        import datetime
+        print "refreshing %s"% datetime.datetime.today()
         self.texts=[]
         self.ids=[]
         for s in self._statuses :
@@ -322,7 +324,7 @@ class TwClient(object):
 #            except Exception, e:
 #                print "Time conversion error:",e
 #                atime = "..."
-            print s
+            #print s
             try :
                 user_url = s.user.url.encode('latin-1','replace')
             except Exception, e:
