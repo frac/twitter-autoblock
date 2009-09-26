@@ -2,4 +2,4 @@
 build/
 dist/
 pwytter.egg-info/
-
+clean.sh
