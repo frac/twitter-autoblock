@@ -39,6 +39,7 @@ import os.path
 from PIL import Image, ImageTk
 import gettext
 import locale
+from scrolled import Scrolledframe
 
 _imageFile = {}
 def imagefromfile(name):
@@ -77,6 +78,7 @@ class MainPanel(Frame):
         self._versionChecked = False
         self._busy = pwTools.BusyManager(master)
         self._params = pwParam.PwytterParams()
+        self.pos = 0
 
         self.Theme = None
         self._display={
@@ -523,14 +525,14 @@ class MainPanel(Frame):
         return aLine
 
     def _theme_Line(self, aLine, index, type='standard'):
-        if index==0: 
+        if index==self.pos: 
             linecolor = self._display['1stLine#']
         else:
             linecolor = self._display['line#']
-        if type == 'direct':
-            linecolor = self._display['directLine#']
-        if type == 'reply':
-            linecolor = self._display['replyLine#']
+            if type == 'direct':
+                linecolor = self._display['directLine#']
+            if type == 'reply':
+                linecolor = self._display['replyLine#']
         aLine['Box'].config(bg=linecolor)
         aLine['NameBox'].config(bg=linecolor)
         aLine['Name'].config(bg=linecolor, fg=self._display['text#'])
@@ -614,8 +616,8 @@ class MainPanel(Frame):
                 
             self.Lines[i]['Box'].grid(row=i,sticky=W,padx=0, pady=1, ipadx=1, ipady=1)
 
-        for i in range(i+1,len(self.Lines)):
-            self.Lines[i]['Box'].grid_forget()
+        #for i in range(i+1,len(self.Lines)):
+        #    self.Lines[i]['Box'].grid_forget()
 
     
     def _createFriendImage(self, aParent, index, type):   
@@ -768,7 +770,14 @@ class MainPanel(Frame):
         self._create_RefreshBox(self.MainZone)
         self.ParameterBox = Frame(self.MainZone)
         self._create_parameterBox(self.ParameterBox)
-        self.LinesBox= Frame(self.MainZone) 
+        self.LinesBox= Frame(self.MainZone, takefocus=True )
+        self.LinesBox.bind('<j>', self.go_down)
+        self.LinesBox.bind('<k>', self.go_up)
+        #self.LinesBox.protocol('WM_TAKE_FOCUS', self.take_focus)
+        #self.LinesBox.bind('WM_TAKE_FOCUS', self.take_focus)
+        #self.LinesBox.pack()
+        
+
         self.Lines=[]       
         for i in range(self._TwitLines):           
             self.Lines.append(self._create_Line(self.LinesBox, i))
@@ -949,9 +958,26 @@ class MainPanel(Frame):
         else:
             self.RemainCar["text"] =  _("%d character(s) left") % (140-actualLength)
 
+    def take_focus(self):
+        print "foo:"
+        linecolor = self._display['1stLine#']
+        self.LinesBox.config(bg=linecolor)
+    def go_down(self, event):
+        if self.pos < self._TwitLines -1:
+            self.pos += 1
+        self._theme_Line(self.Lines[self.pos-1],self.pos-1)
+        self._theme_Line(self.Lines[self.pos],self.pos)
+    def go_up(self, event):
+        if self.pos > 0:
+            self.pos -= 1
+        self._theme_Line(self.Lines[self.pos+1],self.pos+1)
+        self._theme_Line(self.Lines[self.pos],self.pos)
+
+
 def _initTranslation():
     """Translation stuff : init locale and get text"""       
     gettext.install(APP_NAME)
+
        
 if __name__ == "__main__":
     print "Starting Pwytter..."
@@ -959,7 +985,9 @@ if __name__ == "__main__":
     rootTk = Tk()
     #rootTk.option_add("*Label*font","FreeSans 10 bold")
     rootTk.title('Pwytter %s' % (__version__))
-    rootTk.resizable(width=0, height=0) 
+    rootTk.resizable(width=550, height=30) 
+
+    #AP rootTk.wm_iconbitmap(os.path.join("media",'pwytter.ico'))
     if os.name == 'nt':
         rootTk.iconbitmap(os.path.join("media",'pwytter.ico')) 
     s = pwSplashScreen.Splash(rootTk)
