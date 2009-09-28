@@ -79,6 +79,7 @@ class MainPanel(Frame):
         self._busy = pwTools.BusyManager(master)
         self._params = pwParam.PwytterParams()
         self.pos = 0
+        self.offset = 0
 
         self.Theme = None
         self._display={
@@ -451,7 +452,7 @@ class MainPanel(Frame):
     def _create_Line(self, aParent, i):
         linecolor = self._display['line#']
         aLine={}
-        aLine['Box']      = Frame(aParent)
+        aLine['Box']      = Frame(aParent, highlightthickness=1)
         aLine['ImageRef'] = ImageTk.PhotoImage("RGB",(48,48))
         aLine['Image']    = Label(aLine['Box'],image=aLine['ImageRef'], \
                                        name="imag"+str(i), cursor="hand2")
@@ -484,7 +485,8 @@ class MainPanel(Frame):
                                         _('Reply to this message...'))
         aLine['Msg']      = Label(aLine['Box'],text="...", name=str(i),\
                                   font=self._display['fontMsg'],\
-                                  width=self._display['widthMsg'])
+                                  width=self._display['widthMsg'],
+                                  height=2)
         aLine['MsgHint']=  tkBalloon.Balloon(aLine['Msg'])
         directColor = self._display['directMsg#']
         aLine['DirectBox']      = Frame(aLine['Box'], padx=3, pady=2)
@@ -526,14 +528,17 @@ class MainPanel(Frame):
 
     def _theme_Line(self, aLine, index, type='standard'):
         if index==self.pos: 
-            linecolor = self._display['1stLine#']
+            border = self._display['text#'] #self._display['1stLine#']
         else:
-            linecolor = self._display['line#']
-            if type == 'direct':
-                linecolor = self._display['directLine#']
-            if type == 'reply':
-                linecolor = self._display['replyLine#']
-        aLine['Box'].config(bg=linecolor)
+            border=self._display['twitEdit#']
+
+        linecolor = self._display['line#']
+        if type == 'direct':
+            linecolor = self._display['directLine#']
+        if type == 'reply':
+            linecolor = self._display['replyLine#']
+        #AP
+        aLine['Box'].config(bg=linecolor, highlightbackground=border  )
         aLine['NameBox'].config(bg=linecolor)
         aLine['Name'].config(bg=linecolor, fg=self._display['text#'])
         aLine['Time'].config(bg=linecolor,fg=self._display['time#'])
@@ -557,11 +562,12 @@ class MainPanel(Frame):
         self._imagesLoaded=True
         i=0
         for i in range(min(self._TwitLines,len(self.tw.texts))):
+            j = i + self.offset
             if i+1>len(self.Lines) :
                 self.Lines.append(self._create_Line(self.LinesBox, i))
-            self._theme_Line(self.Lines[i], i, self.tw.texts[i]['type'])
+            self._theme_Line(self.Lines[i], i, self.tw.texts[j]['type'])
             
-            name = self.tw.texts[i]["name"]
+            name = self.tw.texts[j]["name"]
             loaded, aImage= self.tw.imageFromCache(name)
             self._imagesLoaded = self._imagesLoaded and loaded        
             try:
@@ -571,7 +577,7 @@ class MainPanel(Frame):
             self.Lines[i]['Name']["text"]= name
             self.Lines[i]['ImageHint'].settext("http://twitter.com/"+name)
             self.Lines[i]['NameHint'].settext("http://twitter.com/"+name)
-            self.Lines[i]['Time']["text"]= self.tw.texts[i]["time"]
+            self.Lines[i]['Time']["text"]= self.tw.texts[j]["time"]
             if name==self.MyName["text"]:
                 self.Lines[i]['Direct'].grid_forget()
                 self.Lines[i]['DirectInvalid'].grid(row=0,column=1, rowspan=1, sticky='W')
@@ -579,13 +585,13 @@ class MainPanel(Frame):
                 self.Lines[i]['DirectInvalid'].grid_forget()
                 self.Lines[i]['Direct'].grid(row=0,column=1, rowspan=1, sticky='W')
 
-            self.Lines[i]['Msg']["text"]=textwrap.fill(self.tw.texts[i]["msgunicode"], 70, break_long_words=True)           
+            self.Lines[i]['Msg']["text"]=textwrap.fill(self.tw.texts[j]["msgunicode"], 70, break_long_words=True)           
 
             if self.tw.texts[i]["url"]<>'' :
                 self.Lines[i]['Msg'].bind('<1>', self._urlClick)
                 self.Lines[i]['Msg']["cursor"] = 'hand2'
                 self.Lines[i]['Msg']["fg"] = self._display['messageUrl#']
-                self.Lines[i]['MsgHint'].settext(self.tw.texts[i]["url"])
+                self.Lines[i]['MsgHint'].settext(self.tw.texts[j]["url"])
                 self.Lines[i]['MsgHint'].enable()
             else:
                 self.Lines[i]['Msg'].bind('<1>', None)
@@ -600,13 +606,13 @@ class MainPanel(Frame):
             else:
                 self.Lines[i]['UserUrl'].bind('<1>', self._userUrlClick)
                 self.Lines[i]['UserUrl']["cursor"] = 'hand2'
-                self.Lines[i]['UserUrlHint'].settext(self.tw.texts[i]["user_url"])
+                self.Lines[i]['UserUrlHint'].settext(self.tw.texts[j]["user_url"])
                 self.Lines[i]['UserUrlInvalid'].grid_forget() 
                 self.Lines[i]['UserUrl'].grid(row=0, column=3, sticky='E')
                 self.Lines[i]['UserUrl'].grid()
 
             self._imagesLoaded = self._imagesLoaded \
-                                 and self.tw.texts[i]["favorite_updated"]                       
+                                 and self.tw.texts[j]["favorite_updated"]                       
             if self.tw.texts[i]["favorite"]:
                 self.Lines[i]['FavoriteGray'].grid_forget()
                 self.Lines[i]['Favorite'].grid(row=0,column=2, rowspan=1, sticky='E')
@@ -616,8 +622,8 @@ class MainPanel(Frame):
                 
             self.Lines[i]['Box'].grid(row=i,sticky=W,padx=0, pady=1, ipadx=1, ipady=1)
 
-        #for i in range(i+1,len(self.Lines)):
-        #    self.Lines[i]['Box'].grid_forget()
+        for i in range(i+1,len(self.Lines)):
+            self.Lines[i]['Box'].grid_forget()
 
     
     def _createFriendImage(self, aParent, index, type):   
@@ -770,9 +776,10 @@ class MainPanel(Frame):
         self._create_RefreshBox(self.MainZone)
         self.ParameterBox = Frame(self.MainZone)
         self._create_parameterBox(self.ParameterBox)
-        self.LinesBox= Frame(self.MainZone, takefocus=True )
+        self.LinesBox= Frame(self.MainZone, takefocus=True,highlightthickness=1, padx=15, pady=0)
         self.LinesBox.bind('<j>', self.go_down)
         self.LinesBox.bind('<k>', self.go_up)
+        #AP
         #self.LinesBox.protocol('WM_TAKE_FOCUS', self.take_focus)
         #self.LinesBox.bind('WM_TAKE_FOCUS', self.take_focus)
         #self.LinesBox.pack()
@@ -820,7 +827,8 @@ class MainPanel(Frame):
         self.RemainCar.config(bg=self._bg, fg=self._display['text#'] )
         self.editValidate()       
         self.editBox.config(bg=self._bg)
-        self.TwitEdit.config(bg=self._display['twitEdit#'], fg=self._display['text#'])
+        self.LinesBox.config(highlightcolor=self._display['twitEdit#'], highlightbackground=self._bg)
+        self.TwitEdit.config(bg=self._display['twitEdit#'], fg=self._display['text#'],highlightcolor=self._display['text#'], highlightbackground=self._display['twitEdit#'] )
         self.Send.config(bg=self._bg, text=_("Send"))
         self.UpdateZone.config(bg=self._bg)
         self.FriendZone.config(bg=self._bg)
@@ -963,13 +971,20 @@ class MainPanel(Frame):
         linecolor = self._display['1stLine#']
         self.LinesBox.config(bg=linecolor)
     def go_down(self, event):
-        if self.pos < self._TwitLines -1:
+        if self.pos == self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:
+            self.offset += 1
+            self._refresh_lines()
+        elif self.pos < self._TwitLines -1:
             self.pos += 1
         self._theme_Line(self.Lines[self.pos-1],self.pos-1)
         self._theme_Line(self.Lines[self.pos],self.pos)
     def go_up(self, event):
-        if self.pos > 0:
+        if self.pos == 1 and self.offset > 0:
+            self.offset -= 1
+            self._refresh_lines()
+        elif self.pos > 0:
             self.pos -= 1
+
         self._theme_Line(self.Lines[self.pos+1],self.pos+1)
         self._theme_Line(self.Lines[self.pos],self.pos)
 

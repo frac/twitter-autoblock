@@ -25,6 +25,7 @@ import Queue
 import threading
 import simplejson
 import time
+import operator
 from urlparse import urlparse,urlunparse
 from PIL import Image, ImageTk
 import re
@@ -146,6 +147,7 @@ class TwClient(object):
         
         self._statuses =[]
         self.texts = []
+        self.ids = []
         self._friends = []
         self.Friends=[]
         self._followers = []
@@ -317,8 +319,6 @@ class TwClient(object):
         
     def refresh(self):
         self._getCurrentTimeLine()
-        self.texts=[]
-        self.ids=[]
         for s in self._statuses :
             self._addUserToCache(s.user)
             atime= s.relative_created_at
@@ -350,9 +350,11 @@ class TwClient(object):
 
             #remove existing ids : in composite timeline to keep replies 
             if s.id in self.ids:
-                self.texts.pop()
+                continue
+                #self.texts.pop()
             else:
                 self.ids.append(s.id)
+            print s.id
             self.texts.append({"name": s.user.screen_name.encode('latin-1','replace'),
                                "id": s.id,
                                "msg" : msg,
@@ -364,6 +366,8 @@ class TwClient(object):
                                "favorite" : favorited,
                                "favorite_updated" : loaded
                               })
+        self.texts.sort(key=operator.itemgetter('id'),)# reverse=True)
+           
                     
     def sendText(self,aText):
         if aText.lower().strip().startswith(AUTOBLOCK):
