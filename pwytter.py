@@ -805,7 +805,7 @@ class MainPanel(Frame):
         self.ParameterBox.grid(row=1,column=0,columnspan=2)
         self._hideParameters()
         self.LinesBox.grid(row=3, column=0,columnspan=2)
-        self.RemainCar.pack(padx=5)
+        self.RemainCar.pack(padx=0)
         self.TwitEdit.pack(side="left",padx=2, ipadx=2, ipady=2)
         self.Send.pack(side="left", padx=2, ipadx=1, ipady=1)       
         self.TwitEdit.bind("<Return>", self.sendTwit)
@@ -908,6 +908,7 @@ class MainPanel(Frame):
         try:
             self.tw.refresh()
             self._refresh_lines()
+            self.editValidate()       
         except Exception, e :
             self.Time["text"]=textwrap.fill("Refresh error: "+timestr+" >> "+str(e), 50, break_long_words=True)           
 #        finally:
@@ -964,7 +965,7 @@ class MainPanel(Frame):
         if actualLength>140:
             self.twitText.set(self.twitText.get()[:140])
         else:
-            self.RemainCar["text"] =  _("%d character(s) left") % (140-actualLength)
+            self.RemainCar["text"] =  _("%d character(s) left (%d tweets)") % ((140-actualLength), len(self.tw.texts))
 
     def go_down(self, event):
         if self.pos >= self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:

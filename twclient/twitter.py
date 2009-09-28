@@ -925,7 +925,8 @@ class Api(object):
     return [Status.NewFromJsonDict(x) for x in data]
 
   def GetFriendsTimeline(self, user=None, since=None, since_id=None):
-    '''Fetch the sequence of twitter.Status messages for a user's friends
+    '''
+    Fetch the sequence of twitter.Status messages for a user's friends
 
     The twitter.Api instance must be authenticated if the user is private.
 
@@ -952,6 +953,7 @@ class Api(object):
       parameters['since'] = since
     if since_id:
       parameters['since_id'] = since_id
+      parameters['count'] = 100
     json = self._FetchUrl(url, parameters=parameters)
     data = simplejson.loads(json)
     return [Status.NewFromJsonDict(x) for x in data]

@@ -358,7 +358,7 @@ class TwClient(object):
                 for text in self.texts:
                     if text['id'] == s.id:
                         text['time'] = "(%s)" % (atime)
-                continue
+                        continue
                 #self.texts.pop()
             else:
                 self.ids.append(s.id)
