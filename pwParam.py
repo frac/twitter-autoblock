@@ -24,6 +24,7 @@ class PwytterParams(object):
         self._paramPath = os.path.expanduser('~/.pwytter/cfg')
         self._paramFileName = os.path.join(self._paramPath,'pwytter.xml')        
         self._paramFilterName = os.path.join(self._paramPath,'filter.pickle')        
+        self._paramConfigName = os.path.join(self._paramPath,'state.pickle')        
         self.values={}
         self._resetDefaults()
         
@@ -49,6 +50,15 @@ class PwytterParams(object):
 
     def save_filters(self, filters):
         pickle.dump(filters, open(self._paramFilterName, "wb"))
+        
+    def load_extra_config(self):
+        try:
+            return pickle.load(open(self._paramConfigName, "rb"))
+        except IOError:
+            return {}
+
+    def save_extra_config(self, config):
+        pickle.dump(config, open(self._paramConfigName, "wb"))
         
 
     def readFromXML(self):

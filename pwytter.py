@@ -531,7 +531,7 @@ class MainPanel(Frame):
             border = self._display['text#'] #self._display['1stLine#']
         else:
             border=self._display['twitEdit#']
-
+        
         linecolor = self._display['line#']
         if type == 'direct':
             linecolor = self._display['directLine#']
@@ -919,7 +919,7 @@ class MainPanel(Frame):
                 self._refreshTwitZone()
                 self._refreshTime = time.time()
             if not self._imagesLoaded :
-                self.tw.refresh()
+                #self.tw.refresh()
                 self._refresh_lines()
             if self._needToRefreshMe:
                 self._refresh_mySelfBox()
@@ -966,13 +966,10 @@ class MainPanel(Frame):
         else:
             self.RemainCar["text"] =  _("%d character(s) left") % (140-actualLength)
 
-    def take_focus(self):
-        print "foo:"
-        linecolor = self._display['1stLine#']
-        self.LinesBox.config(bg=linecolor)
     def go_down(self, event):
-        if self.pos == self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:
+        if self.pos >= self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:
             self.offset += 1
+            self.pos = self._TwitLines - 2
             self._refresh_lines()
         elif self.pos < self._TwitLines -1:
             self.pos += 1

@@ -32,6 +32,7 @@ import re
 from htmlentitydefs import name2codepoint
 
 AUTOBLOCK = 'autoblock'
+LAST_TWEET = 'last_tweet'
 
 class TwClientError(Exception):
   '''Base class for TwClient errors'''
@@ -146,6 +147,7 @@ class TwClient(object):
         self._deferredLoader = PwDeferedTwitter()
         
         self._statuses =[]
+        self._config = {}
         self.texts = []
         self.ids = []
         self._friends = []
@@ -157,6 +159,7 @@ class TwClient(object):
         self._currentTimeLine = "Friends"  
         self._filters = []
         self.get_filters()
+        self.get_config()
         
         self._currentVersion = float(aVersion)
         self.VersionOK = False
@@ -199,7 +202,7 @@ class TwClient(object):
        
     def _getCurrentTimeLine(self):
         if self._currentTimeLine=="Public":
-            self._statuses = self.StatusesToExt(self.api.GetPublicTimeline(),'standard')
+            self._statuses = self.StatusesToExt(self.api.GetPublicTimeline( since_id=self._config.get(LAST_TWEET, None) ),'standard')
         elif self._currentTimeLine=="User":
             self._statuses = self.StatusesToExt(self.api.GetUserTimeline(self.user),'standard')
         elif self._currentTimeLine=="Replies":
@@ -215,7 +218,7 @@ class TwClient(object):
             self._statuses.sort(key=ExtStatus.GetCreatedAtInSeconds,
                                 reverse=True)
         else :
-            self._statuses = self.StatusesToExt(self.api.GetFriendsTimeline(),'standard')
+            self._statuses = self.StatusesToExt(self.api.GetFriendsTimeline(  since_id=self._config.get(LAST_TWEET, None)  ),'standard')
 
     def StatusesToExt(self, aTimeline, aType):
         """ return a status list as a ExtStatus list
@@ -319,6 +322,8 @@ class TwClient(object):
         
     def refresh(self):
         self._getCurrentTimeLine()
+        import datetime
+        print "refreshing at ", datetime.datetime.today()
         for s in self._statuses :
             self._addUserToCache(s.user)
             atime= s.relative_created_at
@@ -364,9 +369,15 @@ class TwClient(object):
                                "type" : s.type,
                                "user_url" : user_url,
                                "favorite" : favorited,
-                               "favorite_updated" : loaded
+                               "favorite_updated" : loaded,
+                               "seen" : False
                               })
         self.texts.sort(key=operator.itemgetter('id'),)# reverse=True)
+        try:
+            self._config[LAST_TWEET] = self.texts[-1]["id"]
+            self.save_config()
+        except IndexError:
+            pass
            
                     
     def sendText(self,aText):
@@ -420,6 +431,14 @@ class TwClient(object):
         print "saving filters", self._filters
         self._params.save_filters(self._filters)
 
+
+    def get_config(self):
+        self._config = self._params.load_extra_config()
+        print "loading config", self._config
+
+    def save_config(self):
+        print "saving config", self._config
+        self._params.save_extra_config(self._config)
 
 
     def getFollowers(self):
