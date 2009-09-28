@@ -355,6 +355,9 @@ class TwClient(object):
 
             #remove existing ids : in composite timeline to keep replies 
             if s.id in self.ids:
+                for text in self.texts:
+                    if text['id'] == s.id:
+                        text['time'] = "(%s)" % (atime)
                 continue
                 #self.texts.pop()
             else:

@@ -587,7 +587,7 @@ class MainPanel(Frame):
 
             self.Lines[i]['Msg']["text"]=textwrap.fill(self.tw.texts[j]["msgunicode"], 70, break_long_words=True)           
 
-            if self.tw.texts[i]["url"]<>'' :
+            if self.tw.texts[j]["url"]<>'' :
                 self.Lines[i]['Msg'].bind('<1>', self._urlClick)
                 self.Lines[i]['Msg']["cursor"] = 'hand2'
                 self.Lines[i]['Msg']["fg"] = self._display['messageUrl#']
@@ -598,7 +598,7 @@ class MainPanel(Frame):
                 self.Lines[i]['Msg']["cursor"] = ''
                 self.Lines[i]['Msg']["fg"] = self._display['message#']
                 self.Lines[i]['MsgHint'].disable()
-            if self.tw.texts[i]["user_url"] == '':
+            if self.tw.texts[j]["user_url"] == '':
                 self.Lines[i]['UserUrl'].bind('<1>', None)
                 self.Lines[i]['UserUrl']["cursor"] = ''    
                 self.Lines[i]['UserUrl'].grid_forget()           
@@ -613,7 +613,7 @@ class MainPanel(Frame):
 
             self._imagesLoaded = self._imagesLoaded \
                                  and self.tw.texts[j]["favorite_updated"]                       
-            if self.tw.texts[i]["favorite"]:
+            if self.tw.texts[j]["favorite"]:
                 self.Lines[i]['FavoriteGray'].grid_forget()
                 self.Lines[i]['Favorite'].grid(row=0,column=2, rowspan=1, sticky='E')
             else:
