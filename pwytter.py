@@ -32,6 +32,7 @@ import pwParam
 import pwTools
 import pwTheme
 import time
+import thread
 import webbrowser
 import textwrap
 import os
@@ -146,7 +147,7 @@ class MainPanel(Frame):
                 
         self.tw=twclient.TwClient(__version__, self._params)       
         self._applyParameters()
-
+        self.threadlock = thread.allocate_lock()
         self._defaultTwitText = _('Enter your message here...')
         self.twitText = StringVar()
         self.twitText.set(self._defaultTwitText)
@@ -168,6 +169,7 @@ class MainPanel(Frame):
         if self._needToShowParameters:
             self._showParameters()            
         self._refreshTime = 0
+
 
     def _setLanguage(self, aLanguage='English'):
         #Get the local directory since we are not installing anything
@@ -786,8 +788,8 @@ class MainPanel(Frame):
         
 
         self.Lines=[]       
-        for i in range(self._TwitLines):           
-            self.Lines.append(self._create_Line(self.LinesBox, i))
+        #for i in range(self._TwitLines):           
+        #    self.Lines.append(self._create_Line(self.LinesBox, i))
         self.EditParentBox = Frame(self.MainZone, bg=self._bg)
         self.RemainCar = Label(self.EditParentBox,text="...")
         self.editBox = Frame(self.EditParentBox)
@@ -903,6 +905,11 @@ class MainPanel(Frame):
             self.LanguageMenu.post(event.x_root, event.y_root)
   
     def _refreshTwitZone(self):
+        print "start refreshing in threads"
+        thread.start_new_thread(self._refreshTwitZone_tread,())
+
+    def _refreshTwitZone_tread(self):
+        self.threadlock.acquire()
         timestr = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
         self.Time["text"]= timestr
         try:
@@ -913,6 +920,8 @@ class MainPanel(Frame):
             self.Time["text"]=textwrap.fill("Refresh error: "+timestr+" >> "+str(e), 50, break_long_words=True)           
 #        finally:
 #            pass
+        print "finish refreshing in threads"
+        self.threadlock.release()
 
     def timer(self):
         try:
@@ -968,6 +977,8 @@ class MainPanel(Frame):
             self.RemainCar["text"] =  _("%d character(s) left (%d tweets)") % ((140-actualLength), len(self.tw.texts))
 
     def go_down(self, event):
+        if self.pos >= len(self.Lines) -1:
+            return
         if self.pos >= self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:
             self.offset += 1
             self.pos = self._TwitLines - 2
@@ -977,6 +988,8 @@ class MainPanel(Frame):
         self._theme_Line(self.Lines[self.pos-1],self.pos-1)
         self._theme_Line(self.Lines[self.pos],self.pos)
     def go_up(self, event):
+        if self.pos == 0:
+            return
         if self.pos == 1 and self.offset > 0:
             self.offset -= 1
             self._refresh_lines()
