@@ -355,20 +355,17 @@ class TwClient(object):
 
             #remove existing ids : in composite timeline to keep replies 
             if s.id in self.ids:
-                for text in self.texts:
-                    if text['id'] == s.id:
-                        text['time'] = "(%s)" % (atime)
-                        continue
+                continue
                 #self.texts.pop()
             else:
                 self.ids.append(s.id)
-            print s.id
+            #print s.id
             self.texts.append({"name": s.user.screen_name.encode('latin-1','replace'),
                                "id": s.id,
                                "msg" : msg,
                                "msgunicode" : htmlentitydecode(s.text),
                                "url" : urlExtract(msg),
-                               "time": "(%s)" % (atime),
+                               "time": "(%s)" % s.created_at, #(atime),
                                "type" : s.type,
                                "user_url" : user_url,
                                "favorite" : favorited,

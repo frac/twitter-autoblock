@@ -270,7 +270,7 @@ class MainPanel(Frame):
                 self._showUpdatePwytter()
 
     def _create_RefreshBox(self, parent):
-        self.refreshBox = Frame(parent, width=500)
+        self.refreshBox = Frame(parent)
         self.PwytterLink = ClickableImage(self.refreshBox, "home.png", 
                                         self._homeclick,self._bg, "pwyt0",_("Pwytter web site..."))
         self.ShowFriends = ClickableImage(self.refreshBox, "side_expand.png", 
@@ -485,10 +485,13 @@ class MainPanel(Frame):
         aLine['Reply'] = ClickableImage(aLine['IconBox'], \
                                         "arrow_undo.png", self._replyToMessage, linecolor,"repl"+str(i),
                                         _('Reply to this message...'))
+        aLine['Retweet'] = ClickableImage(aLine['IconBox'], \
+                                        "arrow_switch.png", self._retweetMessage, linecolor,"rt"+str(i),
+                                        _('Retweet this message...'))
         aLine['Msg']      = Label(aLine['Box'],text="...", name=str(i),\
                                   font=self._display['fontMsg'],\
                                   width=self._display['widthMsg'],
-                                  height=2)
+                                  height=3)
         aLine['MsgHint']=  tkBalloon.Balloon(aLine['Msg'])
         directColor = self._display['directMsg#']
         aLine['DirectBox']      = Frame(aLine['Box'], padx=3, pady=2)
@@ -514,15 +517,16 @@ class MainPanel(Frame):
         aLine['Time'].grid(row=0,column=1, sticky='W') 
         aLine['IconBox'].grid(row=0,column=2, sticky='E') 
         aLine['Reply'].grid(row=0,column=0, rowspan=1, sticky='E')
+        aLine['Retweet'].grid(row=0,column=1, rowspan=1, sticky='W')
         aLine['Direct'].grid_forget()
-        aLine['DirectInvalid'].grid(row=0,column=1, rowspan=1, sticky='W')
+        aLine['DirectInvalid'].grid(row=0,column=3, rowspan=1, sticky='E')
         aLine['Favorite'].grid_forget()
         aLine['FavoriteGray'].grid(row=0,column=2, rowspan=1, sticky='E')
-        aLine['UserUrl'].grid(row=0,column=3, sticky='E')
+        aLine['UserUrl'].grid(row=0,column=4, sticky='E')
         aLine['UserUrl'].grid_forget()           
-        aLine['UserUrlInvalid'].grid(row=0,column=3, sticky='E')
+        aLine['UserUrlInvalid'].grid(row=0,column=4, sticky='E')
         aLine['Msg'].grid(row=1,column=1,columnspan=2,rowspan=1, sticky='W',padx=1)
-        aLine['Box'].grid(row=i,sticky=W,padx=0, pady=1, ipadx=1, ipady=1)
+        aLine['Box'].grid(row=i,sticky=W,padx=0, pady=1, ipadx=0, ipady=0)
         aLine['DirectBox'].grid_forget()
         aLine['DirectBoxEmpty'].grid(row=2,column=0,columnspan=3,rowspan=1, sticky='W',padx=1)
         self._theme_Line(aLine, i)
@@ -552,6 +556,7 @@ class MainPanel(Frame):
         aLine['UserUrl'].config(bg=linecolor)
         aLine['UserUrlInvalid'].config(bg=linecolor)
         aLine['Reply'].config(bg=linecolor)
+        aLine['Retweet'].config(bg=linecolor)
         aLine['Msg'].config(bg=linecolor, fg=self._display['message#'])
         directColor = self._display['directMsg#']
         aLine['DirectBox'].config(bg=directColor)
@@ -582,10 +587,10 @@ class MainPanel(Frame):
             self.Lines[i]['Time']["text"]= self.tw.texts[j]["time"]
             if name==self.MyName["text"]:
                 self.Lines[i]['Direct'].grid_forget()
-                self.Lines[i]['DirectInvalid'].grid(row=0,column=1, rowspan=1, sticky='W')
+                self.Lines[i]['DirectInvalid'].grid(row=0,column=3, rowspan=1, sticky='W')
             else:
                 self.Lines[i]['DirectInvalid'].grid_forget()
-                self.Lines[i]['Direct'].grid(row=0,column=1, rowspan=1, sticky='W')
+                self.Lines[i]['Direct'].grid(row=0,column=3, rowspan=1, sticky='W')
 
             self.Lines[i]['Msg']["text"]=textwrap.fill(self.tw.texts[j]["msgunicode"], 70, break_long_words=True)           
 
@@ -604,13 +609,13 @@ class MainPanel(Frame):
                 self.Lines[i]['UserUrl'].bind('<1>', None)
                 self.Lines[i]['UserUrl']["cursor"] = ''    
                 self.Lines[i]['UserUrl'].grid_forget()           
-                self.Lines[i]['UserUrlInvalid'].grid(row=0, column=3, sticky='E')
+                self.Lines[i]['UserUrlInvalid'].grid(row=0, column=4, sticky='E')
             else:
                 self.Lines[i]['UserUrl'].bind('<1>', self._userUrlClick)
                 self.Lines[i]['UserUrl']["cursor"] = 'hand2'
                 self.Lines[i]['UserUrlHint'].settext(self.tw.texts[j]["user_url"])
                 self.Lines[i]['UserUrlInvalid'].grid_forget() 
-                self.Lines[i]['UserUrl'].grid(row=0, column=3, sticky='E')
+                self.Lines[i]['UserUrl'].grid(row=0, column=4, sticky='E')
                 self.Lines[i]['UserUrl'].grid()
 
             self._imagesLoaded = self._imagesLoaded \
@@ -755,8 +760,14 @@ class MainPanel(Frame):
         self.Lines[lineIndex]['DirectBoxEmpty'].grid(row=2,column=0,columnspan=3,rowspan=1, sticky='W',padx=1)
 
     def _replyToMessage(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
         self.twitText.set('@'+self.tw.texts[lineIndex]["name"]+" ")
+        self.TwitEdit.icursor(140)
+        self.TwitEdit.focus_set()
+        
+    def _retweetMessage(self,par=None):
+        lineIndex= int(par.widget.winfo_name()[2:]) + self.offset
+        self.twitText.set('RT:@'+self.tw.texts[lineIndex]["name"]+ " "+self.tw.texts[lineIndex]["msg"])
         self.TwitEdit.icursor(140)
         self.TwitEdit.focus_set()
         
@@ -778,9 +789,12 @@ class MainPanel(Frame):
         self._create_RefreshBox(self.MainZone)
         self.ParameterBox = Frame(self.MainZone)
         self._create_parameterBox(self.ParameterBox)
-        self.LinesBox= Frame(self.MainZone, takefocus=True,highlightthickness=1, padx=15, pady=0)
+        self.LinesBox= Frame(self.MainZone, takefocus=True,highlightthickness=1, padx=0, pady=0)
         self.LinesBox.bind('<j>', self.go_down)
         self.LinesBox.bind('<k>', self.go_up)
+        self.LinesBox.bind('<Button-4>', self.go_up)
+        self.LinesBox.bind('<Button-5>', self.go_down)
+
         #AP
         #self.LinesBox.protocol('WM_TAKE_FOCUS', self.take_focus)
         #self.LinesBox.bind('WM_TAKE_FOCUS', self.take_focus)
@@ -788,8 +802,8 @@ class MainPanel(Frame):
         
 
         self.Lines=[]       
-        #for i in range(self._TwitLines):           
-        #    self.Lines.append(self._create_Line(self.LinesBox, i))
+        for i in range(self._TwitLines):           
+            self.Lines.append(self._create_Line(self.LinesBox, i))
         self.EditParentBox = Frame(self.MainZone, bg=self._bg)
         self.RemainCar = Label(self.EditParentBox,text="...")
         self.editBox = Frame(self.EditParentBox)
@@ -829,7 +843,7 @@ class MainPanel(Frame):
         self.RemainCar.config(bg=self._bg, fg=self._display['text#'] )
         self.editValidate()       
         self.editBox.config(bg=self._bg)
-        self.LinesBox.config(highlightcolor=self._display['twitEdit#'], highlightbackground=self._bg)
+        self.LinesBox.config(highlightcolor=self._display['update#'], highlightbackground=self._bg)
         self.TwitEdit.config(bg=self._display['twitEdit#'], fg=self._display['text#'],highlightcolor=self._display['text#'], highlightbackground=self._display['twitEdit#'] )
         self.Send.config(bg=self._bg, text=_("Send"))
         self.UpdateZone.config(bg=self._bg)
@@ -854,24 +868,24 @@ class MainPanel(Frame):
         self._openweb('http://www.pwytter.com/download')
         
     def _urlClick(self,par=None):
-        lineIndex= int(par.widget.winfo_name())
+        lineIndex= int(par.widget.winfo_name()) + self.offset
         self._openweb(self.tw.texts[lineIndex]["url"])
 
     def _nameClick(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
         self._openweb("http://twitter.com/"+self.tw.texts[lineIndex]["name"])
             
     def _friendClick(self,par=None):
-        friendIndex= int(par.widget.winfo_name()[4:])
+        friendIndex= int(par.widget.winfo_name()[4:]) + self.offset
         self._openweb(self.FriendImages[friendIndex]['ImageHint'].gettext())
 
     def _userUrlClick(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
         userurl = self.tw.texts[lineIndex]["user_url"]
         if userurl != "": self._openweb(userurl)
 
     def _setFavoriteClick(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
         print "Set Favo id",self.tw.texts[lineIndex]["id"]
         self.tw.createFavorite(self.tw.texts[lineIndex]["name"],
                                self.tw.texts[lineIndex]["id"])
@@ -879,7 +893,7 @@ class MainPanel(Frame):
         self._refresh_lines()
 
     def _unsetFavoriteClick(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
         print "UnSet Favo id",self.tw.texts[lineIndex]["id"]
         self.tw.destroyFavorite(self.tw.texts[lineIndex]["name"],
                                 self.tw.texts[lineIndex]["id"])
@@ -977,8 +991,8 @@ class MainPanel(Frame):
             self.RemainCar["text"] =  _("%d character(s) left (%d tweets)") % ((140-actualLength), len(self.tw.texts))
 
     def go_down(self, event):
-        if self.pos >= len(self.Lines) -1:
-            return
+        #if self.pos >= len(self.Lines) -1:
+        #    return
         if self.pos >= self._TwitLines - 2 and self.offset < len(self.tw.texts) - self._TwitLines:
             self.offset += 1
             self.pos = self._TwitLines - 2
@@ -988,8 +1002,8 @@ class MainPanel(Frame):
         self._theme_Line(self.Lines[self.pos-1],self.pos-1)
         self._theme_Line(self.Lines[self.pos],self.pos)
     def go_up(self, event):
-        if self.pos == 0:
-            return
+        #if self.pos == 0:
+        #    return
         if self.pos == 1 and self.offset > 0:
             self.offset -= 1
             self._refresh_lines()
@@ -1011,7 +1025,7 @@ if __name__ == "__main__":
     rootTk = Tk()
     #rootTk.option_add("*Label*font","FreeSans 10 bold")
     rootTk.title('Pwytter %s' % (__version__))
-    rootTk.resizable(width=550, height=30) 
+    rootTk.resizable(width=600, height=30) 
 
     #AP rootTk.wm_iconbitmap(os.path.join("media",'pwytter.ico'))
     if os.name == 'nt':
