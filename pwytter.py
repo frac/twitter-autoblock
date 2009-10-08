@@ -40,7 +40,6 @@ import os.path
 from PIL import Image, ImageTk
 import gettext
 import locale
-from scrolled import Scrolledframe
 
 _imageFile = {}
 def imagefromfile(name):
@@ -107,7 +106,7 @@ class MainPanel(Frame):
                 'fontName':"helvetica 8 ",
                 'fontMsg': "helvetica 9",
                 'fontLink':"helvetica 9 underline",
-                'widthMsg':61,
+                'widthMsg':75,
                 'widthTwit':62,
                 'widthDirectMsg':59
                 })
@@ -145,9 +144,9 @@ class MainPanel(Frame):
         except:
             self._needToShowParameters = True
                 
+        self.threadlock = thread.allocate_lock()
         self.tw=twclient.TwClient(__version__, self._params)       
         self._applyParameters()
-        self.threadlock = thread.allocate_lock()
         self._defaultTwitText = _('Enter your message here...')
         self.twitText = StringVar()
         self.twitText.set(self._defaultTwitText)
@@ -162,7 +161,7 @@ class MainPanel(Frame):
         
         self._bg=self._display['bg#']
         self['bg']=self._bg
-        self.pack(ipadx=2, ipady=2)
+        self.pack(ipadx=2, ipady=2,fill=BOTH, expand=YES)
         self._create_widgets()
         self._refresh_mySelfBox()
         self._refresh_version()
@@ -205,6 +204,7 @@ class MainPanel(Frame):
         self._display.update(self.Theme.values)
 
     def _applyParameters(self):
+        print "start apply params running"
         self._refreshRate = int(self._params['refresh_rate'])
         self._TwitLines = int(self._params['nb_lines'])
         self.tw.login(self._params['user'], self._params['password'])
@@ -237,7 +237,8 @@ class MainPanel(Frame):
         self.MySelfBox["bg"] = self._display['me_bg#']
         self.MyName.config(bg= self._display['me_bg#'],fg=self._display['text#'])
         self.MyUrl.config(bg= self._display['me_bg#'], fg= self._display['me_fg#'])
-        
+    
+
     def _refresh_mySelfBox(self):
         self._theme_mySelfBox()
         try:
@@ -454,7 +455,7 @@ class MainPanel(Frame):
     def _create_Line(self, aParent, i):
         linecolor = self._display['line#']
         aLine={}
-        aLine['Box']      = Frame(aParent, highlightthickness=1)
+        aLine['Box']      = Frame(aParent, highlightthickness=1, padx=10)
         aLine['ImageRef'] = ImageTk.PhotoImage("RGB",(48,48))
         aLine['Image']    = Label(aLine['Box'],image=aLine['ImageRef'], \
                                        name="imag"+str(i), cursor="hand2")
@@ -525,8 +526,8 @@ class MainPanel(Frame):
         aLine['UserUrl'].grid(row=0,column=4, sticky='E')
         aLine['UserUrl'].grid_forget()           
         aLine['UserUrlInvalid'].grid(row=0,column=4, sticky='E')
-        aLine['Msg'].grid(row=1,column=1,columnspan=2,rowspan=1, sticky='W',padx=1)
-        aLine['Box'].grid(row=i,sticky=W,padx=0, pady=1, ipadx=0, ipady=0)
+        aLine['Msg'].grid(row=1,column=1,columnspan=2,rowspan=1,padx=1, sticky="news")
+        aLine['Box'].grid(row=i,padx=0, pady=1, ipadx=0, ipady=0, sticky="news")
         aLine['DirectBox'].grid_forget()
         aLine['DirectBoxEmpty'].grid(row=2,column=0,columnspan=3,rowspan=1, sticky='W',padx=1)
         self._theme_Line(aLine, i)
@@ -750,11 +751,13 @@ class MainPanel(Frame):
         self.UpdateEmptyBox.grid(row=0,column=0)
 
     def _showDirectMessage(self,par=None):
-        lineIndex= int(par.widget.winfo_name()[4:])
+        # theres no offset here.
+        lineIndex= int(par.widget.winfo_name()[4:]) 
         self.Lines[lineIndex]['DirectBoxEmpty'].grid_forget()
         self.Lines[lineIndex]['DirectBox'].grid(row=2,column=0,columnspan=3,rowspan=1, sticky='W',padx=1)
 
     def _hideDirectMessage(self,par=None):
+        #theres no offset here
         lineIndex= int(par.widget.winfo_name()[4:])
         self.Lines[lineIndex]['DirectBox'].grid_forget()
         self.Lines[lineIndex]['DirectBoxEmpty'].grid(row=2,column=0,columnspan=3,rowspan=1, sticky='W',padx=1)
@@ -772,9 +775,16 @@ class MainPanel(Frame):
         self.TwitEdit.focus_set()
         
     def _sendDirectMessage(self,par=None):
+        print "start dmthread in threads"
+        thread.start_new_thread(self._sendDirectMessage_thread,(par))
+
+
+    def _sendDirectMessage_thread(self,par=None):
+        self.threadlock.acquire()
+        print "start dmthread running"
         self._busy.set()
         try:
-            lineIndex= int(par.widget.winfo_name()[4:])
+            lineIndex= int(par.widget.winfo_name()[4:]) + self.offset
             try:
                 print self.tw.sendDirectMessage(self.tw.texts[lineIndex]["name"], self.directText.get())
             except Exception,e :
@@ -782,9 +792,11 @@ class MainPanel(Frame):
             self._hideDirectMessage(par)
         finally:
             self._busy.reset()
+        self.threadlock.release()
+        print "finish dmthread in threads"
 
     def _create_widgets(self):      
-        self.MainZone = Frame(self)
+        self.MainZone = Frame(self, highlightthickness=0)
         self._create_mySelfBox(self.MainZone)
         self._create_RefreshBox(self.MainZone)
         self.ParameterBox = Frame(self.MainZone)
@@ -804,9 +816,9 @@ class MainPanel(Frame):
         self.Lines=[]       
         for i in range(self._TwitLines):           
             self.Lines.append(self._create_Line(self.LinesBox, i))
-        self.EditParentBox = Frame(self.MainZone, bg=self._bg)
+        self.EditParentBox = Frame(self.MainZone, bg=self._bg, highlightthickness=0)
         self.RemainCar = Label(self.EditParentBox,text="...")
-        self.editBox = Frame(self.EditParentBox)
+        self.editBox = Frame(self.EditParentBox,)
         self.TwitEdit = Entry(self.editBox, width=self._display['widthTwit'],\
                               textvariable=self.twitText, bd=0)
         self.Send = ClickableImage(self.editBox, "comment.png", 
@@ -820,18 +832,18 @@ class MainPanel(Frame):
         self.refreshBox.grid(row=0, column=1, sticky="SE")
         self.ParameterBox.grid(row=1,column=0,columnspan=2)
         self._hideParameters()
-        self.LinesBox.grid(row=3, column=0,columnspan=2)
+        self.LinesBox.grid(row=3, column=0,columnspan=2, sticky="news")
         self.RemainCar.pack(padx=0)
         self.TwitEdit.pack(side="left",padx=2, ipadx=2, ipady=2)
         self.Send.pack(side="left", padx=2, ipadx=1, ipady=1)       
         self.TwitEdit.bind("<Return>", self.sendTwit)
         self.TwitEdit.bind('<Button-1>',self.emptyTwit)  
         self.twitText.trace("w", self.editValidate)
-        self.editBox.pack()      
-        self.EditParentBox.grid(row=4,column=0,columnspan=2, pady=2)       
-        self.UpdateZone.grid(row=0,column=0)
-        self.MainZone.grid(row=1,column=0,sticky=W)
-        self.FriendZone.grid(row=1,column=1,sticky=NE)
+        self.editBox.pack(side=BOTTOM, anchor=S)      
+        self.EditParentBox.grid(row=5,column=0,columnspan=2, pady=2, sticky="news")       
+        self.UpdateZone.grid(row=0,column=0, sticky="news")
+        self.MainZone.grid(row=1,column=0,sticky="news")
+        self.FriendZone.grid(row=1,column=1, sticky="news")
         self._hideFriends()
         self._theme_widgets()
         
@@ -920,10 +932,11 @@ class MainPanel(Frame):
   
     def _refreshTwitZone(self):
         print "start refreshing in threads"
-        thread.start_new_thread(self._refreshTwitZone_tread,())
+        thread.start_new_thread(self._refreshTwitZone_thread,())
 
-    def _refreshTwitZone_tread(self):
+    def _refreshTwitZone_thread(self):
         self.threadlock.acquire()
+        print "start refreshing running"
         timestr = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
         self.Time["text"]= timestr
         try:
@@ -956,6 +969,12 @@ class MainPanel(Frame):
             self.after(1000, self.timer)
 
     def sendTwit(self,par=None):
+        print "start twit in threads"
+        thread.start_new_thread(self._sendTwit_thread,(par))
+
+    def _sendTwit_thread(self,par=None):
+        self.threadlock.acquire()
+        print "start twit running"
         self._busy.set()
         try:
             self.tw.sendText(self.twitText.get())
@@ -964,6 +983,8 @@ class MainPanel(Frame):
             self.editValidate()
         finally:
             self._busy.reset()
+        self.threadlock.release()
+        print "finish twit in threads"
         
     def emptyTwit(self,par=None):
         if self.twitText.get() == self._defaultTwitText:
